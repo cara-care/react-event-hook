@@ -1,6 +1,6 @@
 {
-  "name": "react-event-hook",
-  "version": "3.0.4",
+  "name": "@cara-care/react-event-hook",
+  "version": "1.0.1",
   "description": "A library for emitting and listening to events in a React application",
   "license": "MIT",
   "keywords": [
@@ -25,8 +25,8 @@
   "bugs": {
     "url": "https://github.com/etienne-martin/react-event-hook/issues"
   },
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "concurrently 'webpack --mode development --watch' 'tsc --watch'",
     "build": "concurrently 'webpack --mode production' 'tsc'",
