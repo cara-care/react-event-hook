@@ -1,9 +1,7 @@
 import EventEmitter from "eventemitter3";
-import { useStorageListener } from "./hooks/storage.hook";
-import { deserializeEvent, serializeEvent } from "./helpers/event-serializer";
+import { serializeEvent } from "./helpers/event-serializer";
 import { LOCAL_STORAGE_KEY } from "./react-event-hook.constant";
 import { pascalCase } from "./utils/pascal-case";
-import { canUseDom } from "./utils/dom";
 import { generateRandomId } from "./utils/random-id";
 import { useEvent } from "./hooks/event.hook";
 import { useIsomorphicLayoutEffect } from "./hooks/layout-effect.hook";
@@ -44,18 +42,6 @@ export const createEvent = <EventName extends string>(name: EventName) => {
     const useListener: Listener<any> = (handler: (payload: any) => void) => {
       const eventHandler = useEvent(handler);
 
-      useStorageListener((storageEvent) => {
-        if (!crossTab) return;
-        if (!storageEvent.newValue) return;
-        if (storageEvent.key !== LOCAL_STORAGE_KEY) return;
-
-        const event = deserializeEvent(storageEvent.newValue);
-
-        if (event.name !== normalizedEventName) return;
-
-        handler(event.payload);
-      });
-
       useIsomorphicLayoutEffect(() => {
         eventEmitter.addListener(normalizedEventName, eventHandler);
 
@@ -66,13 +52,6 @@ export const createEvent = <EventName extends string>(name: EventName) => {
     };
 
     const emitter: Emitter<Payload> = (payload) => {
-      if (!canUseDom) {
-        console.warn(
-          `Could not emit "${normalizedEventName}" event. Events cannot be emitted from the server.`
-        );
-        return;
-      }
-
       duplicateEventDetection();
       eventEmitter.emit(normalizedEventName, payload);
 
